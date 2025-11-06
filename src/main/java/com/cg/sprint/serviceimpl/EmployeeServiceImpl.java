@@ -35,6 +35,11 @@ public class EmployeeServiceImpl implements EmployeeService {
         dto.setFirstName(emp.getFirstName());
         dto.setLastName(emp.getLastName());
         dto.setEmail(emp.getEmail());
+        dto.setPhoneNumber(emp.getPhoneNumber()); 
+        dto.setHireDate(emp.getHireDate());       
+        dto.setSalary(emp.getSalary());           
+        dto.setCommissionPct(emp.getCommissionPct()); 
+        dto.setManagerId(emp.getManager() != null ? emp.getManager().getEmployeeId() : null); // ✅ Added
         dto.setJobId(emp.getJob() != null ? emp.getJob().getJobId() : null);
         dto.setDepartmentId(emp.getDepartment() != null ? emp.getDepartment().getDepartmentId() : null);
         return dto;
@@ -48,3 +53,4 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
 }
+
