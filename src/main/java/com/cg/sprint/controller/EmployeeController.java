@@ -22,4 +22,10 @@ public class EmployeeController {
     public EmployeeDTO getEmployeeById(@PathVariable Long id) {
         return employeeService.getEmployeeById(id);
     }
+    @GetMapping("/location/{locationId}")
+    public List<EmployeeDTO> getEmployeesByLocation(@PathVariable Long locationId) {
+        return employeeService.getEmployeesByLocation(locationId);
+    }
+    
+
 }
