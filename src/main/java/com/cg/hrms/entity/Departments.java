@@ -1,13 +1,12 @@
 package com.cg.hrms.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "departments")
-public class Departments {
+public class Department {
 
     @Id
     @Column(name = "department_id")
@@ -20,13 +19,13 @@ public class Departments {
     private Long managerId;
 
     @ManyToOne
-    @JsonBackReference
+    @JsonIgnore
     @JoinColumn(name = "location_id")
-    private Locations location;
+    private Location location;
 
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<Employees> employees;
+    @JsonIgnore
+    private List<Employee> employees;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -37,9 +36,9 @@ public class Departments {
     public Long getManagerId() { return managerId; }
     public void setManagerId(Long managerId) { this.managerId = managerId; }
 
-    public Locations getLocation() { return location; }
-    public void setLocation(Locations location) { this.location = location; }
+    public Location getLocation() { return location; }
+    public void setLocation(Location location) { this.location = location; }
 
-    public List<Employees> getEmployees() { return employees; }
-    public void setEmployees(List<Employees> employees) { this.employees = employees; }
+    public List<Employee> getEmployees() { return employees; }
+    public void setEmployees(List<Employee> employees) { this.employees = employees; }
 }
