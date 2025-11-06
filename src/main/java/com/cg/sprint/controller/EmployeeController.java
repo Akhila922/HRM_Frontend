@@ -1,7 +1,11 @@
 package com.cg.sprint.controller;
 
 import com.cg.sprint.dto.EmployeeDTO;
+import com.cg.sprint.dto.EmployeeSummaryDto;
 import com.cg.sprint.service.EmployeeService;
+
+import io.swagger.v3.oas.annotations.Operation;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -22,10 +26,9 @@ public class EmployeeController {
     public EmployeeDTO getEmployeeById(@PathVariable Long id) {
         return employeeService.getEmployeeById(id);
     }
-    @GetMapping("/location/{locationId}")
-    public List<EmployeeDTO> getEmployeesByLocation(@PathVariable Long locationId) {
-        return employeeService.getEmployeesByLocation(locationId);
+    @GetMapping("/country/{countryName}/summary")
+    @Operation(summary = "By country → location, dept, emp name/id/email/phone")
+    public List<EmployeeSummaryDto> byCountrySummary(@PathVariable String countryName) {
+      return employeeService.getEmployeeSummariesByCountry(countryName);
     }
-    
-
 }
