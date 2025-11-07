@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CountryRepositorySwathi extends JpaRepository<Country, String> {
+
 }
