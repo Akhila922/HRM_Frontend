@@ -17,7 +17,7 @@ public class CountryServiceImplSwathi implements CountryServiceSwathi {
     public CountryServiceImplSwathi(CountryRepositorySwathi repo) {
         this.repo = repo;
     }
-
+    
     @Override
     public List<CountryDtoSwathi> getAllCountriesWithCities() {
         return repo.findAll().stream().map(country -> {
@@ -33,4 +33,5 @@ public class CountryServiceImplSwathi implements CountryServiceSwathi {
             return dto;
         }).collect(Collectors.toList());
     }
+
 }
