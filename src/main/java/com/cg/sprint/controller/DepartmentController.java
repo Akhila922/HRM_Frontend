@@ -28,4 +28,5 @@ public class DepartmentController {
     public List<EmployeeDTO> getEmployeesByDepartment(@PathVariable Long id) {
         return departmentService.getEmployeesByDepartment(id);
     }
+
 }
