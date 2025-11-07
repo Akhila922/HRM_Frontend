@@ -11,7 +11,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
-
 @Entity
 @Table(name = "countries")
 public class Country {
@@ -43,3 +42,4 @@ public class Country {
     public List<Location> getLocations() { return locations; }
     public void setLocations(List<Location> locations) { this.locations = locations; }
 }
+
