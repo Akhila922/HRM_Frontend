@@ -6,8 +6,6 @@ public class CountryDtoSwathi {
     private String countryName;
     private List<String> cities;
 
-    // ✅ Getters and Setters (make sure names and capitalization match exactly)
-
     public String getCountryName() {
         return countryName;
     }
@@ -24,3 +22,4 @@ public class CountryDtoSwathi {
         this.cities = cities;
     }
 }
+
