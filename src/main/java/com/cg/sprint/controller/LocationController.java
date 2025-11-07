@@ -28,4 +28,5 @@ public class LocationController {
     public List<DepartmentDTO> getDepartmentsByLocation(@PathVariable Long id) {
         return locationService.getDepartmentsByLocation(id);
     }
+
 }
