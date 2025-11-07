@@ -7,6 +7,6 @@ import com.cg.hrms.entity.Department;
 public interface DepartmentRepositorySwathi {
 
 	List<Department> findAll();
-
-
+	
 }
+
