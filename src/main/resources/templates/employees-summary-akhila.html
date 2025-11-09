@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -45,7 +46,8 @@
     <div class="pagination" id="pagination"></div>
   </div>
 
-  <script>
+  <script th:inline="javascript">
+    const apiBaseUrl = /*[[${apiBaseUrl}]]*/ 'http://localhost:9090';
     const params = new URLSearchParams(window.location.search);
     const deptId = params.get("deptId");
     const heading = document.getElementById("heading");
@@ -59,7 +61,7 @@
     let currentPage = 1;
     const itemsPerPage = 20;
 
-    const api = `http://localhost:9090/akhila/departments/${deptId}/employees`;
+    const api = `${apiBaseUrl}/akhila/departments/${deptId}/employees`;
 
     fetch(api)
       .then(res => res.json())
