@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Employees - Vishnu</title>
+  <link rel="stylesheet" th:href="@{/css/table.css}" href="/css/table.css">
+</head>
+<body>
+  <div class="particles">
+    <div class="particle" style="width: 120px; height: 120px; left: 10%; top: 20%; animation-delay: 0s;"></div>
+    <div class="particle" style="width: 100px; height: 100px; left: 80%; top: 30%; animation-delay: 3s;"></div>
+    <div class="particle" style="width: 150px; height: 150px; left: 50%; top: 50%; animation-delay: 6s;"></div>
+    <div class="particle" style="width: 90px; height: 90px; left: 20%; top: 70%; animation-delay: 2s;"></div>
+    <div class="particle" style="width: 110px; height: 110px; left: 70%; top: 60%; animation-delay: 4s;"></div>
+  </div>
+
+  <div class="container">
+    <header>
+      <h1>Employees for Job ID: <span id="job-id"></span></h1>
+    </header>
+
+    <div class="controls">
+      <div class="search-box">
+        <input type="text" id="search-box" placeholder="🔍 Search by name, email, or department..." />
+      </div>
+      <a href="/vishnu/jobs" class="back-button">← Back to Jobs</a>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Employee ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Department</th>
+            <th>Location</th>
+            <th>Salary</th>
+          </tr>
+        </thead>
+        <tbody id="employee-table-body">
+          <tr><td colspan="7" class="no-data">Loading...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination" id="pagination"></div>
+  </div>
+
+  <script th:inline="javascript">
+    const apiBaseUrl = /*[[${apiBaseUrl}]]*/ 'http://localhost:9090';
+    const params = new URLSearchParams(window.location.search);
+    const jobId = params.get('jobId');
+    document.getElementById('job-id').innerText = jobId || 'N/A';
+    const tbody = document.getElementById('employee-table-body');
+    const searchBox = document.getElementById('search-box');
+
+    let allEmployees = [];
+    let filteredEmployees = [];
+    let currentPage = 1;
+    const itemsPerPage = 20;
+
+    if (jobId) {
+      fetch(`${apiBaseUrl}/api/jobs/${jobId}/employees`)
+        .then(response => {
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return response.json();
+        })
+        .then(data => {
+          allEmployees = data;
+          filteredEmployees = data;
+          renderTable();
+          renderPagination();
+        })
+        .catch(error => {
+          console.error('Error fetching employees:', error);
+          tbody.innerHTML = `<tr><td colspan="7" class="no-data">Error loading employee data.</td></tr>`;
+        });
+    }
+
+    searchBox.addEventListener('input', e => {
+      currentPage = 1;
+      const val = searchBox.value.toLowerCase();
+      filteredEmployees = allEmployees.filter(emp =>
+        (emp.firstName + ' ' + emp.lastName).toLowerCase().includes(val) ||
+        (emp.email || '').toLowerCase().includes(val) ||
+        (emp.departmentName || '').toLowerCase().includes(val) ||
+        (emp.department?.departmentName || '').toLowerCase().includes(val) ||
+        (emp.department?.location?.city || '').toLowerCase().includes(val)
+      );
+      renderTable();
+      renderPagination();
+    });
+
+    function renderTable() {
+      tbody.innerHTML = '';
+      if (filteredEmployees.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="no-data">No employees found.</td></tr>';
+        return;
+      }
+
+      const start = (currentPage - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageData = filteredEmployees.slice(start, end);
+
+      pageData.forEach(emp => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${emp.employeeId || '-'}</td>
+          <td>${(emp.firstName || '') + ' ' + (emp.lastName || '')}</td>
+          <td>${emp.email || 'N/A'}</td>
+          <td>${emp.phoneNumber || 'N/A'}</td>
+          <td>${emp.departmentName || emp.department?.departmentName || 'N/A'}</td>
+          <td>${emp.locationName || emp.department?.location?.city || 'N/A'}</td>
+          <td>${emp.salary || 'N/A'}</td>
+        `;
+        tbody.appendChild(row);
+      });
+    }
+
+    function renderPagination() {
+      const pagination = document.getElementById('pagination');
+      pagination.innerHTML = '';
+
+      if (filteredEmployees.length <= itemsPerPage) return;
+
+      const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
+
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = '‹';
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.onclick = () => { currentPage--; renderTable(); renderPagination(); };
+      pagination.appendChild(prevBtn);
+
+      const startPage = Math.max(1, currentPage - 2);
+      const endPage = Math.min(totalPages, currentPage + 2);
+
+      for (let i = startPage; i <= endPage; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.className = i === currentPage ? 'active' : '';
+        btn.onclick = () => { currentPage = i; renderTable(); renderPagination(); };
+        pagination.appendChild(btn);
+      }
+
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = '›';
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.onclick = () => { currentPage++; renderTable(); renderPagination(); };
+      pagination.appendChild(nextBtn);
+
+      const info = document.createElement('div');
+      info.className = 'pagination-info';
+      const start = (currentPage - 1) * itemsPerPage + 1;
+      const end = Math.min(currentPage * itemsPerPage, filteredEmployees.length);
+      info.textContent = `Showing ${start}-${end} of ${filteredEmployees.length}`;
+      pagination.appendChild(info);
+    }
+  </script>
+</body>
+</html>

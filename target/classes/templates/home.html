@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HRMS Home</title>
+  <link rel="stylesheet" th:href="@{/css/homestyles.css}" href="/css/homestyles.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1 class="main-title">HRMS</h1>
+
+    <div class="team-structure">
+
+      <!-- Top Row -->
+      <div class="team-row">
+        <div class="member orange">
+          <a th:href="@{/employees-anubhaw}" href="/employees-anubhaw">
+            <img th:src="@{/images/anu-bhauji.jpg}" src="/images/anu-bhauji.jpg" alt="Anubhaw">
+            <h3>ANUBHAW</h3>
+            <p>Employees → Job History</p>
+            <span class="line"></span>
+          </a>
+        </div>
+
+        <div class="member blue">
+          <a th:href="@{/akhila/departments}" href="/akhila/departments">
+            <img th:src="@{/images/image.png}" src="/images/image.png" alt="Akhila">
+            <h3>AKHILA</h3>
+            <p>Departments → Employees</p>
+            <span class="line"></span>
+          </a>
+        </div>
+
+        <div class="member cyan">
+          <a th:href="@{/jaheer/employees}" href="/jaheer/employees">
+            <img th:src="@{/images/Jaheer.png}" src="/images/image.png" alt="Jaheer">
+            <h3>JAHEER</h3>
+            <p>Employees → Departments</p>
+            <span class="line"></span>
+          </a>
+        </div>
+
+        <div class="member red">
+          <a th:href="@{/locations}" href="/locations">
+            <img th:src="@{/images/satya.jpg}" src="/images/satya.jpg" alt="Satya">
+            <h3>SATYA</h3>
+            <p>Locations → Employees</p>
+            <span class="line"></span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Bottom Row -->
+      <div class="team-row">
+        <div class="member green">
+          <a th:href="@{/regions-vighnesh}" href="/regions-vighnesh">
+            <img th:src="@{/images/image.png}" src="/images/image.png" alt="Vighnesh">
+            <h3>VIGHNESH</h3>
+            <p>Regions → Countries</p>
+            <span class="line"></span>
+          </a>
+        </div>
+
+        <div class="member teal">
+          <a th:href="@{/vishnu/jobs}" href="/vishnu/jobs">
+            <img th:src="@{/images/image.png}" src="/images/image.png" alt="Vishnu">
+            <h3>VISHNU</h3>
+            <p>Jobs → Employees</p>
+            <span class="line"></span>
+          </a>
+        </div>
+
+        <div class="member purple">
+          <a th:href="@{/swathi/countries}" href="/swathi/countries">
+            <img th:src="@{/images/image.png}" src="/images/image.png" alt="Swathi">
+            <h3>SWATHI</h3>
+            <p>Countries → Cities</p>
+            <span class="line"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

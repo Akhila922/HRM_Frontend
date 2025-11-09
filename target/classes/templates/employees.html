@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employees - HRMS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0118 0%, #1a0b2e 25%, #2d1654 50%, #4a1e7c 75%, #6b2d9e 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(255, 0, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 100, 200, 0.15) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.4), rgba(0, 255, 255, 0.4));
+            border-radius: 50%;
+            animation: float 25s infinite ease-in-out;
+            filter: blur(60px);
+        }
+
+        @keyframes float {
+            0%, 100% { 
+                transform: translate(0, 0) scale(1); 
+                opacity: 0.3;
+            }
+            33% { 
+                transform: translate(200px, -150px) scale(1.3); 
+                opacity: 0.8;
+            }
+            66% { 
+                transform: translate(-150px, 200px) scale(0.8); 
+                opacity: 0.5;
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            animation: slideDown 0.8s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            color: #ffffff;
+            font-size: 2.5em;
+            font-weight: 800;
+            text-shadow: 0 0 30px rgba(255, 0, 255, 0.8), 0 0 60px rgba(0, 255, 255, 0.4);
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ff00ff 0%, #00ffff 50%, #ff6ec7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-box input:focus {
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .back-button {
+            padding: 12px 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(0, 255, 255, 0.3));
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.5);
+            border-color: #ff00ff;
+        }
+
+        .table-container {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 
+                0 20px 50px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            overflow-x: auto;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            color: #ffffff;
+        }
+
+        th {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.3), rgba(0, 255, 255, 0.3));
+            padding: 15px;
+            text-align: left;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        tr:hover {
+            background: rgba(255, 0, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            padding: 10px 15px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 40px;
+        }
+
+        .pagination button:hover:not(:disabled) {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.4), rgba(0, 255, 255, 0.4));
+            border-color: #ff00ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 0, 255, 0.4);
+        }
+
+        .pagination button.active {
+            background: linear-gradient(135deg, #ff00ff, #00ffff);
+            border-color: #ff00ff;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.6);
+        }
+
+        .pagination button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .pagination-info {
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            .table-container {
+                padding: 15px;
+            }
+
+            th, td {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle" style="width: 120px; height: 120px; left: 10%; top: 20%; animation-delay: 0s;"></div>
+        <div class="particle" style="width: 100px; height: 100px; left: 80%; top: 30%; animation-delay: 3s;"></div>
+        <div class="particle" style="width: 150px; height: 150px; left: 50%; top: 50%; animation-delay: 6s;"></div>
+        <div class="particle" style="width: 90px; height: 90px; left: 20%; top: 70%; animation-delay: 2s;"></div>
+        <div class="particle" style="width: 110px; height: 110px; left: 70%; top: 60%; animation-delay: 4s;"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>Operational Staff</h1>
+        </header>
+
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="🔍 Search by name, email, or job...">
+            </div>
+            <a href="/" class="back-button">← Back to Home</a>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Job</th>
+                        <th>Salary</th>
+                    </tr>
+                </thead>
+                <tbody id="employee-table-body"></tbody>
+            </table>
+        </div>
+
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <script th:inline="javascript">
+    const apiBaseUrl = /*[[${@environment.getProperty('app.api.base-url')}]]*/ 'http://localhost:9090';
+    const params = new URLSearchParams(window.location.search);
+    const locationId = params.get('locationId');
+
+    let allEmployees = [];
+    let filteredEmployees = [];
+    let currentPage = 1;
+    const itemsPerPage = 10;
+    const tbody = document.getElementById('employee-table-body');
+
+    // Fetch employees
+    if (locationId) {
+        const endpoint = `${apiBaseUrl}/satya/employees/location/${locationId}`;
+        console.log("Fetching employees from:", endpoint);
+
+        fetch(endpoint)
+            .then(response => {
+                console.log("Fetch response status:", response.status);
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error("No employees found for this location");
+                    } else {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log("Fetched employee data:", data);
+                allEmployees = data;
+                filteredEmployees = data;
+                renderTable();
+                renderPagination();
+            })
+            .catch(error => {
+                console.error("Error loading employees:", error.message);
+                tbody.innerHTML = '';
+
+                let message = '';
+                if (error.message.includes("No employees found")) {
+                    message = '<tr><td colspan="6" class="no-data">No employees found for this location.</td></tr>';
+                } else if (error.message.includes("Server error")) {
+                    message = '<tr><td colspan="6" class="no-data">Server error occurred. Please try again later.</td></tr>';
+                } else {
+                    message = '<tr><td colspan="6" class="no-data">Error loading employees.</td></tr>';
+                }
+
+                tbody.innerHTML = message;
+            });
+    } else {
+        tbody.innerHTML = '<tr><td colspan="6" class="no-data">No location selected!</td></tr>';
+    }
+
+    // Search functionality
+    document.getElementById('search-input').addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        filteredEmployees = allEmployees.filter(emp => {
+            const name = `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
+            const email = (emp.email || '').toLowerCase();
+            const job = (emp.job?.jobTitle || emp.jobId || '').toLowerCase();
+            return name.includes(searchTerm) || email.includes(searchTerm) || job.includes(searchTerm);
+        });
+        currentPage = 1;
+        renderTable();
+        renderPagination();
+    });
+
+    function renderTable() {
+        tbody.innerHTML = '';
+
+        if (filteredEmployees.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="no-data">No employees found.</td></tr>';
+            return;
+        }
+
+        const start = (currentPage - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const pageEmployees = filteredEmployees.slice(start, end);
+
+        pageEmployees.forEach(emp => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${emp.employeeId}</td>
+                <td>${emp.firstName || ''} ${emp.lastName || ''}</td>
+                <td>${emp.email ? (emp.email.toLowerCase() + '@gmail.com') : 'N/A'}</td>
+                <td>${emp.phoneNumber || 'N/A'}</td>
+                <td>${emp.job?.jobTitle || emp.jobId || 'N/A'}</td>
+                <td>${emp.salary ? '$' + emp.salary.toLocaleString() : 'N/A'}</td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function renderPagination() {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        if (filteredEmployees.length === 0) return;
+
+        const totalPages = Math.ceil(filteredEmployees.length / itemsPerPage);
+
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = '‹';
+        prevBtn.disabled = currentPage === 1;
+        prevBtn.onclick = () => {
+            currentPage--;
+            renderTable();
+            renderPagination();
+        };
+        pagination.appendChild(prevBtn);
+
+        const startPage = Math.max(1, currentPage - 2);
+        const endPage = Math.min(totalPages, currentPage + 2);
+
+        if (startPage > 1) {
+            const firstBtn = document.createElement('button');
+            firstBtn.textContent = '1';
+            firstBtn.onclick = () => {
+                currentPage = 1;
+                renderTable();
+                renderPagination();
+            };
+            pagination.appendChild(firstBtn);
+
+            if (startPage > 2) {
+                const dots = document.createElement('span');
+                dots.textContent = '...';
+                dots.style.color = '#fff';
+                dots.style.padding = '10px';
+                pagination.appendChild(dots);
+            }
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+            const btn = document.createElement('button');
+            btn.textContent = i;
+            btn.className = i === currentPage ? 'active' : '';
+            btn.onclick = () => {
+                currentPage = i;
+                renderTable();
+                renderPagination();
+            };
+            pagination.appendChild(btn);
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                const dots = document.createElement('span');
+                dots.textContent = '...';
+                dots.style.color = '#fff';
+                dots.style.padding = '10px';
+                pagination.appendChild(dots);
+            }
+
+            const lastBtn = document.createElement('button');
+            lastBtn.textContent = totalPages;
+            lastBtn.onclick = () => {
+                currentPage = totalPages;
+                renderTable();
+                renderPagination();
+            };
+            pagination.appendChild(lastBtn);
+        }
+
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = '›';
+        nextBtn.disabled = currentPage === totalPages;
+        nextBtn.onclick = () => {
+            currentPage++;
+            renderTable();
+            renderPagination();
+        };
+        pagination.appendChild(nextBtn);
+
+        const info = document.createElement('div');
+        info.className = 'pagination-info';
+        const start = (currentPage - 1) * itemsPerPage + 1;
+        const end = Math.min(currentPage * itemsPerPage, filteredEmployees.length);
+        info.textContent = `Showing ${start}-${end} of ${filteredEmployees.length}`;
+        pagination.appendChild(info);
+    }
+</script>
+</body>
+</html>

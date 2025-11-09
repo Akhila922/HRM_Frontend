@@ -1,0 +1,137 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(180deg, #260033 0%, #1a084a 50%, #05173f 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: hidden;
+  color: #fff;
+}
+
+/* Main container */
+.container {
+  text-align: center;
+  width: 100%;
+}
+
+/* Title */
+.main-title {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 5px;
+  color: #fff;
+  margin-bottom: 70px;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Team Structure Layout */
+.team-structure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 80px;
+}
+
+.team-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 70px;
+  flex-wrap: wrap;
+}
+
+/* Member Card */
+.member {
+  position: relative;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.member:hover {
+  transform: translateY(-10px);
+}
+
+.member img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  background: #fff;
+  object-fit: cover;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.member h3 {
+  margin-top: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.member p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.8);
+  margin-top: 4px;
+}
+
+/* Colored Gradient Lines */
+.line {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 100%;
+  width: 3px;
+  height: 70px;
+  background: linear-gradient(to bottom, var(--color), transparent);
+  margin-top: 10px;
+}
+
+/* Different Member Colors */
+.member.orange { --color: #ff7b00; }
+.member.blue { --color: #5a5aff; }
+.member.cyan { --color: #35c9ff; }
+.member.red { --color: #ff305f; }
+.member.green { --color: #00ff88; }
+.member.teal { --color: #29ffc6; }
+.member.purple { --color: #d35bff; }
+
+/* Hover Glow Effect */
+.member:hover img {
+  border-color: var(--color);
+  box-shadow: 0 0 20px var(--color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-title {
+    font-size: 2.2rem;
+  }
+
+  .team-row {
+    gap: 40px;
+  }
+
+  .member img {
+    width: 70px;
+    height: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-title {
+    font-size: 2rem;
+  }
+
+  .team-row {
+    flex-direction: column;
+    gap: 50px;
+  }
+}
