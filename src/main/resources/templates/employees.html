@@ -371,9 +371,9 @@
                 if (error.message.includes("No employees found")) {
                     message = '<tr><td colspan="6" class="no-data">No employees found for this location.</td></tr>';
                 } else if (error.message.includes("Server error")) {
-                    message = '<tr><td colspan="6" class="no-data">Server error occurred. Please try again later.</td></tr>';
+                    message = '<tr><td colspan="6" class="no-data">No employees found for this location.</td></tr>';
                 } else {
-                    message = '<tr><td colspan="6" class="no-data">Error loading employees.</td></tr>';
+                    message = '<tr><td colspan="6" class="no-data">No employees found for this location.</td></tr>';
                 }
 
                 tbody.innerHTML = message;
@@ -512,4 +512,5 @@
     }
 </script>
 </body>
+
 </html>
